@@ -1,13 +1,28 @@
 package com.javatraining.worlddata.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 /**
  *
  * @author Binnur Kurt (binnur.kurt@gmail.com)
  */
+@Entity
+@Table(name = "City")
 public class City {
+	@Id
+	@Column(name = "id", unique = true, nullable = false)
 	private int id;
+
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "population")
 	private int population;
+
+	@Column(name = "country_code", length = 3)
 	private String countryCode;
 
 	public City() {

@@ -1,5 +1,7 @@
 package com.javatraining.worlddata.entity;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +9,33 @@ import java.util.List;
  *
  * @author Binnur Kurt (binnur.kurt@gmail.com)
  */
+@Entity
+@Table(name = "Country")
 public class Country {
+	@Id
+	@Column(name = "code")
 	private String code;
+
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "continent")
 	private String continent;
+
+	@Column(name = "surface_area")
 	private double surfaceArea;
+
+	@Column(name = "population")
 	private int population;
+
+	@Column(name = "gnp")
 	private double gnp;
+
+	@Column(name = "capital")
 	private int capital;
+
+	@Column(name = "cities")
+	@OneToMany
 	private List<City> cities;
 	{
 		cities = new ArrayList<>();
