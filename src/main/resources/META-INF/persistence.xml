@@ -14,7 +14,9 @@
             <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:./src/main/resources/WorldData"/>
             <property name="jakarta.persistence.jdbc.user" value="sa"/>
             <property name="jakarta.persistence.jdbc.password" value=""/>
+            <!-- Do not use in production!
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            -->
         </properties>
     </persistence-unit>
 </persistence>
