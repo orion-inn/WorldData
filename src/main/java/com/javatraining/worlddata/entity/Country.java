@@ -2,57 +2,46 @@ package com.javatraining.worlddata.entity;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
 
-/**
- *
- * @author Binnur Kurt (binnur.kurt@gmail.com)
- */
 @Entity
 @Table(name = "Country")
-public class Country {
+public class Country implements Serializable {
+
 	@Id
-	@Column(name = "code")
+	@Column(name = "code", unique = true, nullable = false)
 	private String code;
 
-	@Column(name = "name")
+	@Column(name = "name", unique = true, nullable = false)
 	private String name;
 
 	@Column(name = "continent")
 	private String continent;
 
-	@Column(name = "surface_area")
-	private double surfaceArea;
-
 	@Column(name = "population")
 	private int population;
+
+	@Column(name = "surface_area")
+	private double surfaceArea;
 
 	@Column(name = "gnp")
 	private double gnp;
 
-	@Column(name = "capital")
-	private int capital;
-
-	@Column(name = "cities")
-	@OneToMany
-	private List<City> cities;
-	{
-		cities = new ArrayList<>();
-	}
+	@Column(name = "capital_city")
+	private int capitalCity;
 
 	public Country() {
 	}
 
-	public Country(String code, String name, String continent, int population,
-			double surfaceArea, double gnp, int capital) {
+	public Country(String code, String name, String continent, int population, double surfaceArea, double gnp, int capitalCity) {
 		this.code = code;
 		this.name = name;
 		this.continent = continent;
-		this.surfaceArea = surfaceArea;
 		this.population = population;
-		this.capital = capital;
+		this.surfaceArea = surfaceArea;
 		this.gnp = gnp;
+		this.capitalCity = capitalCity;
 	}
 
 	public String getCode() {
@@ -79,6 +68,14 @@ public class Country {
 		this.continent = continent;
 	}
 
+	public int getPopulation() {
+		return population;
+	}
+
+	public void setPopulation(int population) {
+		this.population = population;
+	}
+
 	public double getSurfaceArea() {
 		return surfaceArea;
 	}
@@ -95,55 +92,35 @@ public class Country {
 		this.gnp = gnp;
 	}
 
-	public int getCapital() {
-		return capital;
+	public int getCapitalCity() {
+		return capitalCity;
 	}
 
-	public void setCapital(int capital) {
-		this.capital = capital;
+	public void setCapitalCity(int capitalCity) {
+		this.capitalCity = capitalCity;
 	}
 
-	public void setPopulation(int population) {
-		this.population = population;
-	}
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-	public int getPopulation() {
-		return population;
-	}
+		Country country = (Country) o;
 
-	public List<City> getCities() {
-		return cities;
+		return code.equals(country.code);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Country other = (Country) obj;
-		if (code == null) {
-			if (other.code != null)
-				return false;
-		} else if (!code.equals(other.code))
-			return false;
-		return true;
+		return Objects.hashCode(code);
 	}
 
 	@Override
 	public String toString() {
-		return "Country [ name=" + name + ", population="
-				+ population + "]";
+		return "Country:  " +
+				"name='" + name + "'  " +
+				"continent='" + continent + "'  " +
+				"population=" + population + "  " +
+				"surfaceArea=" + surfaceArea;
 	}
-
 }

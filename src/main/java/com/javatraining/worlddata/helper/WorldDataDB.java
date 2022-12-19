@@ -2,19 +2,26 @@ package com.javatraining.worlddata.helper;
 
 import com.javatraining.worlddata.entity.City;
 import com.javatraining.worlddata.entity.Country;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class WorldDataDB {
 
-    private static Map<String, Country> countries;
-    private static Map<Integer, City> cities;
+    private static final Map<String, Country> countries;
+    private static final Map<Integer, City> cities;
 
-    // Helper methods
+    static {
+        countries = new ConcurrentHashMap<>();
+        cities = new ConcurrentHashMap<>();
+
+        createCountries();
+        createCities1();
+        createCities1000();
+        createCities2000();
+        createCities3000();
+        createCities4000();
+    }
 
     private static void createCountries() {
         countries.put("ABW", new Country("ABW", "Aruba", "North America",
@@ -4681,58 +4688,11 @@ public class WorldDataDB {
         cities.put(4079, new City(4079, "Rafah", "PSE", 92020));
     }
 
-    public static void setup() {
-        countries  = new ConcurrentHashMap<>();
-        cities = new ConcurrentHashMap<>();
-
-        createCountries();
-        createCities1();
-        createCities1000();
-        createCities2000();
-        createCities3000();
-        createCities4000();
-
-        for (City city : cities.values()) {
-            Country country = countries.get(city.getCountryCode());
-            if (country != null) {
-                country.getCities().add(city);
-            }
-        }
-
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("world-data-pu");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-        try {
-            entityManager.getTransaction().begin();
-
-            for (City city : cities.values()) {
-                entityManager.persist(city);
-            }
-
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            e.printStackTrace();
-        }
-
-        try {
-            entityManager.getTransaction().begin();
-
-            for (Country country : countries.values()) {
-                entityManager.persist(country);
-            }
-
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            e.printStackTrace();
-        }
-
-        entityManager.close();
-        entityManagerFactory.close();
+    public static Map<String, Country> getAllCountries() {
+        return countries;
     }
 
-    public static void main(String[] args) {
-        setup();
+    public static Map<Integer, City> getAllCities() {
+        return cities;
     }
 }

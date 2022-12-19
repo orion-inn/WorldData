@@ -1,28 +1,25 @@
 package com.javatraining.worlddata.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
-/**
- *
- * @author Binnur Kurt (binnur.kurt@gmail.com)
- */
+import java.io.Serializable;
+import java.util.Objects;
+
 @Entity
 @Table(name = "City")
-public class City {
+public class City implements Serializable {
+
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	private int id;
 
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	private String name;
 
 	@Column(name = "population")
 	private int population;
 
-	@Column(name = "country_code", length = 3)
+	@Column(name = "country_code")
 	private String countryCode;
 
 	public City() {
@@ -68,31 +65,25 @@ public class City {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		City city = (City) o;
+
+		return id == city.id;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		City other = (City) obj;
-		if (id != other.id)
-			return false;
-		return true;
+	public int hashCode() {
+		return Objects.hashCode(id);
 	}
 
 	@Override
 	public String toString() {
-		return "City [id=" + id + ", name=" + name + ", population="
-				+ population + ", countryCode=" + countryCode + "]";
-	};
-
+		return "City:  " +
+				"name='" + name + "'  " +
+				"countryCode='" + countryCode + "'  " +
+				"population=" + population;
+	}
 }
