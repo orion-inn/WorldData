@@ -5,12 +5,15 @@ import com.javatraining.worlddata.dao.JPAWorldDao;
 import com.javatraining.worlddata.entity.City;
 import com.javatraining.worlddata.entity.Country;
 import com.javatraining.worlddata.helper.WorldDataDB;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 import java.util.Comparator;
 
 public class Main {
     public static void main(String[] args) {
-        WorldDao worldDao = JPAWorldDao.getInstance();
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("world-data");
+        WorldDao worldDao = JPAWorldDao.getInstance(entityManagerFactory);
 
         // Add cities
         WorldDataDB.getAllCities().values().forEach(worldDao::addCity);

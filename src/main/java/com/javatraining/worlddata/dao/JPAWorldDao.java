@@ -12,10 +12,10 @@ public class JPAWorldDao implements WorldDao {
 
     private static JPAWorldDao instance;
 
-    public static JPAWorldDao getInstance() {
+    public static JPAWorldDao getInstance(EntityManagerFactory entityManagerFactory) {
         synchronized (JPAWorldDao.class) {
             if (instance == null) {
-                instance = new JPAWorldDao();
+                instance = new JPAWorldDao(entityManagerFactory);
             }
         }
 
@@ -26,6 +26,10 @@ public class JPAWorldDao implements WorldDao {
 
     private JPAWorldDao() {
         entityManagerFactory = Persistence.createEntityManagerFactory("world-data");
+    }
+
+    private JPAWorldDao(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     private void executeInsideTransaction(Consumer<EntityManager> action) {
