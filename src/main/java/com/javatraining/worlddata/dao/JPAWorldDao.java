@@ -22,7 +22,7 @@ public class JPAWorldDao implements WorldDao {
         return instance;
     }
 
-    private final EntityManagerFactory entityManagerFactory;
+    private EntityManagerFactory entityManagerFactory;
 
     private JPAWorldDao() {
         entityManagerFactory = Persistence.createEntityManagerFactory("world-data");
@@ -41,9 +41,7 @@ public class JPAWorldDao implements WorldDao {
             action.accept(entityManager);
             transaction.commit();
         } catch (RuntimeException e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            transaction.rollback();
             throw e;
         } finally {
             entityManager.close();
