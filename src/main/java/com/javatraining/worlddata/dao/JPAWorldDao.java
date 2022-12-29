@@ -43,13 +43,6 @@ public class JPAWorldDao implements WorldDao {
     }
 
     @Override
-    public List<City> findCitiesWithIds(List<Integer> ids) {
-        return ids.stream()
-                .map(this::findCityById)
-                .toList();
-    }
-
-    @Override
     public List<City> findAllCities() {
         return entityManager.createQuery("SELECT city FROM City city", City.class).getResultList();
     }
@@ -78,13 +71,6 @@ public class JPAWorldDao implements WorldDao {
     public List<Country> findCountriesByPartialName(String name) {
         String query = "SELECT country FROM Country country WHERE country.name LIKE '%" + name + "%'";
         return entityManager.createQuery(query, Country.class).getResultList();
-    }
-
-    @Override
-    public List<Country> findCountriesByCodes(List<String> codes) {
-        return codes.stream()
-                .map(this::findCountryByCode)
-                .toList();
     }
 
     @Override

@@ -9,6 +9,5 @@ public interface CountryDao {
 	void updateCountry(Country country);
 	Country findCountryByCode(String code);
 	List<Country> findCountriesByPartialName(String name);
-	List<Country> findCountriesByCodes(List<String> codes);
 	List<Country> findAllCountries();
 }

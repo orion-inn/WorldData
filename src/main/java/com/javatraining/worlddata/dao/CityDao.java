@@ -10,6 +10,5 @@ public interface CityDao {
 	void updateCity(City city);
 	City findCityById(int id);
 	List<City> findCitiesByPartialName(String name);
-	List<City> findCitiesWithIds(List<Integer> ids);
 	List<City> findAllCities();
 }
