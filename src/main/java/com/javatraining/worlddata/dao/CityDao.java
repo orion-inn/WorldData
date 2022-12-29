@@ -9,5 +9,7 @@ public interface CityDao {
 	void removeCity(City city);
 	void updateCity(City city);
 	City findCityById(int id);
+	List<City> findCitiesByPartialName(String name);
+	List<City> findCitiesWithIds(List<Integer> ids);
 	List<City> findAllCities();
 }
