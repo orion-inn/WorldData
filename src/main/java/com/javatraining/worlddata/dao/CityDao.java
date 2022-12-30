@@ -2,13 +2,13 @@ package com.javatraining.worlddata.dao;
 
 import com.javatraining.worlddata.entity.City;
 
-/**
- *
- * @author Binnur Kurt (binnur.kurt@gmail.com)
- */
+import java.util.List;
+
 public interface CityDao {
-	City addCity(City city);
-	City removeCity(City city);
-	City updateCity(City city);
+	void addCity(City city);
+	void removeCity(City city);
+	void updateCity(City city);
 	City findCityById(int id);
+	List<City> findCitiesByPartialName(String name);
+	List<City> findAllCities();
 }
