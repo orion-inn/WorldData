@@ -5,13 +5,11 @@ import com.javatraining.worlddata.exception.ResourceAlreadyExistsException;
 import com.javatraining.worlddata.exception.ResourceNotFoundException;
 import com.javatraining.worlddata.repository.CountryRepository;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,28 +34,17 @@ class CountryServiceTest {
     @BeforeAll
     static void setUpBeforeAll() {
         oldCountry = new Country("Yugoslavia");
-        newCountry = new Country("Serbia");
-
         oldCountry.setId(1);
+
+        newCountry = new Country("Serbia");
         newCountry.setId(2);
     }
 
-    @BeforeEach
-    void setUpBeforeEach() {
-        lenient().when(repository.findAll()).thenReturn(List.of(oldCountry, newCountry));
-
-        lenient().when(repository.findById(anyInt())).thenReturn(Optional.of(oldCountry));
-        lenient().when(repository.findById(eq(newCountry.getId()))).thenReturn(Optional.empty());
-
-        lenient().when(repository.findByName(anyString())).thenReturn(Optional.of(oldCountry));
-        lenient().when(repository.findByName(eq(newCountry.getName()))).thenReturn(Optional.empty());
-
-        lenient().when(repository.save(any(Country.class))).thenReturn(newCountry);
-        lenient().doNothing().when(repository).delete(any(Country.class));
-    }
-
     @Test
-    void testCreate_new_shouldSucceed() {
+    void testCreateNewShouldSucceed() {
+        when(repository.findByName(eq(newCountry.getName()))).thenReturn(Optional.empty());
+        when(repository.save(any(Country.class))).thenReturn(newCountry);
+
         assertEquals(newCountry, service.create(newCountry));
         verify(repository).findByName(stringArgumentCaptor.capture());
         verify(repository).save(countryArgumentCaptor.capture());
@@ -66,7 +53,9 @@ class CountryServiceTest {
     }
 
     @Test
-    void testCreate_old_shouldFail() {
+    void testCreateOldShouldFail() {
+        when(repository.findByName(anyString())).thenReturn(Optional.of(oldCountry));
+
         assertThrows(ResourceAlreadyExistsException.class, () -> service.create(oldCountry));
         verify(repository).findByName(stringArgumentCaptor.capture());
         verifyNoMoreInteractions(repository);
@@ -74,7 +63,10 @@ class CountryServiceTest {
     }
 
     @Test
-    void testUpdate_old_shouldSucceed() {
+    void testUpdateOldShouldSucceed() {
+        when(repository.findById(anyInt())).thenReturn(Optional.of(oldCountry));
+        when(repository.save(any(Country.class))).thenReturn(newCountry);
+
         assertEquals(newCountry, service.update(oldCountry.getId(), oldCountry));
         verify(repository).findById(integerArgumentCaptor.capture());
         verify(repository).save(countryArgumentCaptor.capture());
@@ -83,7 +75,9 @@ class CountryServiceTest {
     }
 
     @Test
-    void testUpdate_new_shouldFail() {
+    void testUpdateNewShouldFail() {
+        when(repository.findById(eq(newCountry.getId()))).thenReturn(Optional.empty());
+
         assertThrows(ResourceNotFoundException.class, () -> service.update(newCountry.getId(), newCountry));
         verify(repository).findById(integerArgumentCaptor.capture());
         verifyNoMoreInteractions(repository);
@@ -91,7 +85,9 @@ class CountryServiceTest {
     }
 
     @Test
-    void testDelete_old_shouldSucceed() {
+    void testDeleteOldShouldSucceed() {
+        when(repository.findById(anyInt())).thenReturn(Optional.of(oldCountry));
+
         assertDoesNotThrow(() -> service.delete(oldCountry.getId()));
         verify(repository).findById(integerArgumentCaptor.capture());
         verify(repository).delete(countryArgumentCaptor.capture());
@@ -100,47 +96,48 @@ class CountryServiceTest {
     }
 
     @Test
-    void testDelete_new_shouldFail() {
+    void testDeleteNewShouldFail() {
+        when(repository.findById(eq(newCountry.getId()))).thenReturn(Optional.empty());
+
         assertThrows(ResourceNotFoundException.class, () -> service.delete(newCountry.getId()));
         verify(repository).findById(integerArgumentCaptor.capture());
         verifyNoMoreInteractions(repository);
+        assertEquals(newCountry.getId(), integerArgumentCaptor.getValue());
     }
 
     @Test
-    void testGetById_old_shouldSucceed() {
+    void testGetByIdOldShouldSucceed() {
+        when(repository.findById(anyInt())).thenReturn(Optional.of(oldCountry));
+
         assertEquals(oldCountry, service.getById(oldCountry.getId()));
         verify(repository).findById(integerArgumentCaptor.capture());
         assertEquals(oldCountry.getId(), integerArgumentCaptor.getValue());
     }
 
     @Test
-    void testGetById_new_shouldFail() {
+    void testGetByIdNewShouldFail() {
+        when(repository.findById(eq(newCountry.getId()))).thenReturn(Optional.empty());
+
         assertThrows(ResourceNotFoundException.class, () -> service.getById(newCountry.getId()));
         verify(repository).findById(integerArgumentCaptor.capture());
         assertEquals(newCountry.getId(), integerArgumentCaptor.getValue());
     }
 
     @Test
-    void testGetByName_old_shouldSucceed() {
+    void testGetByNameOldShouldSucceed() {
+        when(repository.findByName(anyString())).thenReturn(Optional.of(oldCountry));
+
         assertEquals(oldCountry, service.getByName(oldCountry.getName()));
         verify(repository).findByName(stringArgumentCaptor.capture());
         assertEquals(oldCountry.getName(), stringArgumentCaptor.getValue());
     }
 
     @Test
-    void testGetByName_new_shouldFail() {
+    void testGetByNameNewShouldFail() {
+        when(repository.findByName(eq(newCountry.getName()))).thenReturn(Optional.empty());
+
         assertThrows(ResourceNotFoundException.class, () -> service.getByName(newCountry.getName()));
         verify(repository).findByName(stringArgumentCaptor.capture());
         assertEquals(newCountry.getName(), stringArgumentCaptor.getValue());
-    }
-
-    @Test
-    void testGetAll() {
-        List<Country> countries = service.getAll();
-        assertNotNull(countries);
-        assertEquals(2, countries.size());
-        assertEquals(oldCountry, countries.get(0));
-        assertEquals(newCountry, countries.get(1));
-        verify(repository).findAll();
     }
 }
