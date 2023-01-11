@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>World Data / Cities</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+</head>
+<body class="container d-flex flex-column h-100 py-4 gap-2">
+    <header class="p-4 rounded bg-dark text-light">
+        <h1>World Data</h1>
+        <p class="lead">World presented through its continents, countries, and cities</p>
+    </header>
+
+    <nav class="navbar px-2">
+        <ol class="breadcrumb py-2" style="margin-block-end: 0">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a>Cities</a></li>
+        </ol>
+        <button class="btn btn-primary" type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#cityModal"
+                data-bs-modalTitle="Create City"
+                data-bs-action="save">Create City</button>
+    </nav>
+
+    <aside th:if="${message}" class="alert alert-info text-center" role="alert">
+        <span th:text="${message}" />
+    </aside>
+
+    <main>
+        <table class="table table-hover table-striped">
+            <thead class="table-secondary">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Area</th>
+                    <th>Population</th>
+                    <th>Country</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="city : ${cities}">
+                    <td th:text="${city.id}">
+                    <td th:text="${city.name}">
+                    <td th:text="${city.area}">
+                    <td th:text="${city.population}">
+                    <td th:text="${city.country?.name}">
+                    <td class="d-flex justify-content-end gap-2">
+                        <button class="btn btn-warning" type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#cityModal"
+                                th:data-bs-modalTitle="@{'Edit City (ID ' + ${city.id} + ')'}"
+                                th:data-bs-action="edit"
+                                th:data-bs-cityID="${city.id}"
+                                th:data-bs-cityName="${city.name}"
+                                th:data-bs-cityArea="${city.area}"
+                                th:data-bs-cityPopulation="${city.population}"
+                                th:data-bs-cityCountry="${city.country?.id}">
+                            <i class="bi bi-pen-fill"></i>
+                        </button>
+                        <a class="btn btn-danger" th:href="@{'/cities/delete/' + ${city.id}}"><i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <aside class="modal fade" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <section class="modal-content">
+                <form method="post">
+                    <header class="modal-header">
+                        <h1 class="modal-title fs-4" id="cityModalLabel"></h1>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </header>
+                    <main class="modal-body d-flex flex-column gap-2">
+                        <input id="cityID" type="hidden" name="id">
+                        <label class="col-form-label" for="cityName">Name</label>
+                        <input class="form-control" id="cityName" type="text" name="name" required>
+                        <label class="col-form-label" for="cityArea">Area</label>
+                        <input class="form-control" id="cityArea" type="number" name="area" min="0">
+                        <label class="col-form-label" for="cityPopulation">Population</label>
+                        <input class="form-control" id="cityPopulation" type="number" name="population" min="0">
+                        <label class="col-form-label" for="cityCountry">Country</label>
+                        <input class="form-control" id="cityCountry" type="number" name="country" min="0">
+                    </main>
+                    <footer class="modal-footer">
+                        <button class="btn btn-secondary" type="reset" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </footer>
+                </form>
+            </section>
+        </div>
+    </aside>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script>
+        const modal = document.getElementById("cityModal");
+
+        modal.addEventListener("show.bs.modal", event => {
+            const button = event.relatedTarget;
+
+            const title = button.getAttribute("data-bs-modalTitle");
+            const action = button.getAttribute("data-bs-action");
+            const id = button.getAttribute("data-bs-cityID");
+            const name = button.getAttribute("data-bs-cityName");
+            const area = button.getAttribute("data-bs-cityArea");
+            const population = button.getAttribute("data-bs-cityPopulation");
+            const country = button.getAttribute("data-bs-cityCountry");
+
+            const modalTitle = modal.querySelector("#cityModalLabel");
+            const modalForm = modal.querySelector("form");
+            const cityID = modal.querySelector("#cityID");
+            const cityName = modal.querySelector("#cityName");
+            const cityArea = modal.querySelector("#cityArea");
+            const cityPopulation = modal.querySelector("#cityPopulation");
+            const cityCountry = modal.querySelector("#cityCountry");
+
+            modalTitle.textContent = title;
+            modalForm.action = "/cities/" + action;
+            cityID.value = id;
+            cityName.value = name;
+            cityArea.value = area;
+            cityPopulation.value = population;
+            cityCountry.value = country;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>World Data / Continents</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+</head>
+<body class="container d-flex flex-column h-100 py-4 gap-2">
+    <header class="p-4 rounded bg-dark text-light">
+        <h1>World Data</h1>
+        <p class="lead">World presented through its continents, countries, and cities</p>
+    </header>
+
+    <nav class="navbar px-2">
+        <ol class="breadcrumb py-2" style="margin-block-end: 0">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a>Continent</a></li>
+        </ol>
+        <button class="btn btn-primary" type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#continentModal"
+                data-bs-modalTitle="Create Continent"
+                data-bs-action="save">Create Continent</button>
+    </nav>
+
+    <aside th:if="${message}" class="alert alert-info text-center" role="alert">
+        <span th:text="${message}" />
+    </aside>
+
+    <main>
+        <table class="table table-hover table-striped">
+            <thead class="table-secondary">
+                <tr>
+                    <th>#</th>
+                    <th>Continent</th>
+                    <th>Area</th>
+                    <th>Population</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="continent : ${continents}">
+                    <td th:text="${continent.id}">
+                    <td th:text="${continent.name}">
+                    <td th:text="${continent.area}">
+                    <td th:text="${continent.population}">
+                    <td class="d-flex justify-content-end gap-2">
+                        <button class="btn btn-warning" type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#continentModal"
+                                th:data-bs-modalTitle="@{'Edit Continent (ID ' + ${continent.id} + ')'}"
+                                th:data-bs-action="edit"
+                                th:data-bs-continentID="${continent.id}"
+                                th:data-bs-continentName="${continent.name}"
+                                th:data-bs-continentArea="${continent.area}"
+                                th:data-bs-continentPopulation="${continent.population}"><i class="bi bi-pen-fill"></i></button>
+                        <a class="btn btn-danger" th:href="@{'/continents/delete/' + ${continent.id}}"><i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <aside class="modal fade" id="continentModal" tabindex="-1" aria-labelledby="continentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <section class="modal-content">
+                <form method="post">
+                    <header class="modal-header">
+                        <h1 class="modal-title fs-4" id="continentModalLabel"></h1>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </header>
+                    <main class="modal-body">
+                        <input id="continentID" type="hidden" name="id">
+                        <label class="col-form-label" for="continentName">Name</label>
+                        <input class="form-control" id="continentName" type="text" name="name" required>
+                        <label class="col-form-label" for="continentArea">Area</label>
+                        <input class="form-control" id="continentArea" type="number" name="area" min="0">
+                        <label class="col-form-label" for="continentPopulation">Population</label>
+                        <input class="form-control" id="continentPopulation" type="number" name="population" min="0">
+                    </main>
+                    <footer class="modal-footer">
+                        <button class="btn btn-secondary" type="reset" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </footer>
+                </form>
+            </section>
+        </div>
+    </aside>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script>
+        const modal = document.getElementById("continentModal");
+
+        modal.addEventListener("show.bs.modal", event => {
+            const button = event.relatedTarget;
+
+            const title = button.getAttribute("data-bs-modalTitle");
+            const action = button.getAttribute("data-bs-action");
+            const id = button.getAttribute("data-bs-continentID");
+            const name = button.getAttribute("data-bs-continentName");
+            const area = button.getAttribute("data-bs-continentArea");
+            const population = button.getAttribute("data-bs-continentPopulation");
+
+            const modalTitle = modal.querySelector("#continentModalLabel");
+            const modalForm = modal.querySelector("form");
+            const continentID = modal.querySelector("#continentID");
+            const continentName = modal.querySelector("#continentName");
+            const continentArea = modal.querySelector("#continentArea");
+            const continentPopulation = modal.querySelector("#continentPopulation");
+
+            modalTitle.textContent = title;
+            modalForm.action = "/continents/" + action;
+            continentID.value = id;
+            continentName.value = name;
+            continentArea.value = area;
+            continentPopulation.value = population;
+        });
+    </script>
+</body>
+</html>

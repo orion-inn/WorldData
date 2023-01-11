@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>World Data</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+</head>
+<body class="container d-flex flex-column h-100 py-4 gap-2">
+    <header class="p-4 rounded bg-dark text-light">
+        <h1>World Data</h1>
+        <p class="lead">World presented through its continents, countries, and cities</p>
+    </header>
+
+    <nav class="nav nav-justified flex-column flex-md-row gap-2">
+        <a class="nav-item btn btn-primary btn-lg" href="/continents">Continents</a>
+        <a class="nav-item btn btn-primary btn-lg" href="/countries">Countries</a>
+        <a class="nav-item btn btn-primary btn-lg" href="/cities">Cities</a>
+    </nav>
+
+    <main>
+        <img class="img-fluid d-block mx-auto"
+             src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg"
+             alt="World Map Blank">
+    </main>
+
+    <div class="h-100">
+    </div>
+
+    <footer>
+        <p class="text-center">Copyright &copy; 2023 Java Cadet / Orion Innovation</p>
+    </footer>
+</body>
+</html>
