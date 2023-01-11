@@ -18,7 +18,6 @@ public class ContinentHelper {
                                      CountryRepository countryRepository,
                                      CityRepository cityRepository) {
         return args -> {
-            /*
             continentRepository.save(new Continent("Africa"));
             continentRepository.save(new Continent("Asia"));
             continentRepository.save(new Continent("Europe"));
@@ -30,7 +29,6 @@ public class ContinentHelper {
             cityRepository.save(new City("Belgrade"));
             cityRepository.save(new City("Nizhny Novgorod"));
             cityRepository.save(new City("Kairo"));
-            */
         };
     }
 }
