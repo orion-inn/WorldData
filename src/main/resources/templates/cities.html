@@ -1,32 +1,35 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>World Data / Cities</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" data-th-href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 </head>
 <body class="container d-flex flex-column h-100 py-4 gap-2">
     <header class="p-4 rounded bg-dark text-light">
-        <h1>World Data</h1>
-        <p class="lead">World presented through its continents, countries, and cities</p>
+        <h1 data-th-text="${title}"></h1>
     </header>
 
-    <nav class="navbar px-2">
-        <ol class="breadcrumb py-2" style="margin-block-end: 0">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page"><a>Cities</a></li>
-        </ol>
-        <button class="btn btn-primary" type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#cityModal"
-                data-bs-modalTitle="Create City"
-                data-bs-action="save">Create City</button>
+    <nav class="nav nav-tabs">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/continents">Continents</a>
+        <a class="nav-link" href="/countries">Countries</a>
+        <a class="nav-link active" aria-current="page" href="/cities">Cities</a>
     </nav>
 
-    <aside th:if="${message}" class="alert alert-info text-center" role="alert">
-        <span th:text="${message}" />
+    <aside class="d-flex gap-2 px-2">
+        <div class="flex-grow-1">
+            <div data-th-if="${message}" data-th-text="${message}" class="alert alert-info text-center m-0" role="alert"></div>
+        </div>
+        <div class="d-flex align-items-center">
+            <button class="btn btn-primary" type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#cityModal"
+                    data-bs-modalTitle="Create City"
+                    data-bs-action="save">Create City</button>
+        </div>
     </aside>
 
     <main>
@@ -42,26 +45,33 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="city : ${cities}">
-                    <td th:text="${city.id}">
-                    <td th:text="${city.name}">
-                    <td th:text="${city.area}">
-                    <td th:text="${city.population}">
-                    <td th:text="${city.country?.name}">
+                <tr data-th-each="city : ${cities}">
+                    <td data-th-text="${city.id}"></td>
+                    <td data-th-text="${city.name}"></td>
+                    <td data-th-text="${city.area}"></td>
+                    <td data-th-text="${city.population}"></td>
+                    <td>
+                        <a class="link-primary" title="Go to this country"
+                           data-th-href="@{'/countries?id=' + ${city.country?.id}}"
+                           data-th-text="${city.country?.name}"></a>
+                    </td>
                     <td class="d-flex justify-content-end gap-2">
-                        <button class="btn btn-warning" type="button"
+                        <button class="btn btn-warning" type="button" title="Edit this city"
                                 data-bs-toggle="modal"
                                 data-bs-target="#cityModal"
-                                th:data-bs-modalTitle="@{'Edit City (ID ' + ${city.id} + ')'}"
-                                th:data-bs-action="edit"
-                                th:data-bs-cityID="${city.id}"
-                                th:data-bs-cityName="${city.name}"
-                                th:data-bs-cityArea="${city.area}"
-                                th:data-bs-cityPopulation="${city.population}"
-                                th:data-bs-cityCountry="${city.country?.id}">
+                                data-th-data-bs-modalTitle="@{'Edit City (ID ' + ${city.id} + ')'}"
+                                data-th-data-bs-action="edit"
+                                data-th-data-bs-cityID="${city.id}"
+                                data-th-data-bs-cityName="${city.name}"
+                                data-th-data-bs-cityArea="${city.area}"
+                                data-th-data-bs-cityPopulation="${city.population}"
+                                data-th-data-bs-cityCountry="${city.country?.id}">
                             <i class="bi bi-pen-fill"></i>
                         </button>
-                        <a class="btn btn-danger" th:href="@{'/cities/delete/' + ${city.id}}"><i class="bi bi-trash-fill"></i></a>
+                        <a class="btn btn-danger" title="Delete this city"
+                           data-th-href="@{'/cities/delete/' + ${city.id}}">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
                     </td>
                 </tr>
             </tbody>
@@ -96,36 +106,20 @@
         </div>
     </aside>
 
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script data-th-src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <script>
         const modal = document.getElementById("cityModal");
 
         modal.addEventListener("show.bs.modal", event => {
             const button = event.relatedTarget;
 
-            const title = button.getAttribute("data-bs-modalTitle");
-            const action = button.getAttribute("data-bs-action");
-            const id = button.getAttribute("data-bs-cityID");
-            const name = button.getAttribute("data-bs-cityName");
-            const area = button.getAttribute("data-bs-cityArea");
-            const population = button.getAttribute("data-bs-cityPopulation");
-            const country = button.getAttribute("data-bs-cityCountry");
-
-            const modalTitle = modal.querySelector("#cityModalLabel");
-            const modalForm = modal.querySelector("form");
-            const cityID = modal.querySelector("#cityID");
-            const cityName = modal.querySelector("#cityName");
-            const cityArea = modal.querySelector("#cityArea");
-            const cityPopulation = modal.querySelector("#cityPopulation");
-            const cityCountry = modal.querySelector("#cityCountry");
-
-            modalTitle.textContent = title;
-            modalForm.action = "/cities/" + action;
-            cityID.value = id;
-            cityName.value = name;
-            cityArea.value = area;
-            cityPopulation.value = population;
-            cityCountry.value = country;
+            modal.querySelector("#cityModalLabel").textContent = button.getAttribute("data-bs-modalTitle");
+            modal.querySelector("form").action = "/cities/" + button.getAttribute("data-bs-action");
+            modal.querySelector("#cityID").value = button.getAttribute("data-bs-cityID");
+            modal.querySelector("#cityName").value = button.getAttribute("data-bs-cityName");
+            modal.querySelector("#cityArea").value = button.getAttribute("data-bs-cityArea");
+            modal.querySelector("#cityPopulation").value = button.getAttribute("data-bs-cityPopulation");
+            modal.querySelector("#cityCountry").value = button.getAttribute("data-bs-cityCountry");
         });
     </script>
 </body>

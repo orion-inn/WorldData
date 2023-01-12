@@ -64,4 +64,9 @@ public class CityService {
         log.debug("Getting all cities");
         return repository.findAll();
     }
+
+    public List<City> getAllByCountryName(String country) {
+        log.debug("Getting all cities by country name");
+        return repository.findAllByCountryName(country);
+    }
 }

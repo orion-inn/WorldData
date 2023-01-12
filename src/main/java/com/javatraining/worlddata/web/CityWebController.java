@@ -4,6 +4,7 @@ import com.javatraining.worlddata.entity.City;
 import com.javatraining.worlddata.exception.ResourceAlreadyExistsException;
 import com.javatraining.worlddata.exception.ResourceNotFoundException;
 import com.javatraining.worlddata.service.CityService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,9 +21,27 @@ public class CityWebController {
     CityService service;
 
     @GetMapping("")
-    String showCities(Model model) {
-        List<City> cities = service.getAll();
+    String showCities(Model model,
+            @PathParam("id") Integer id,
+            @PathParam("country") String country) {
+        String title;
+        List<City> cities;
+
+        if (id != null) {
+            City city = service.getById(id);
+            title = city.getName();
+            cities = List.of(city);
+        } else if (country != null) {
+            title = "Cities in " + country;
+            cities = service.getAllByCountryName(country);
+        } else {
+            title = "Cities";
+            cities = service.getAll();
+        }
+
+        model.addAttribute("title", title);
         model.addAttribute("cities", cities);
+
         return "cities";
     }
 

@@ -1,32 +1,35 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>World Data / Countries</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" data-th-href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 </head>
 <body class="container d-flex flex-column h-100 py-4 gap-2">
     <header class="p-4 rounded bg-dark text-light">
-        <h1>World Data</h1>
-        <p class="lead">World presented through its continents, countries, and cities</p>
+        <h1 data-th-text="${title}"></h1>
     </header>
 
-    <nav class="navbar px-2">
-        <ol class="breadcrumb py-2" style="margin-block-end: 0">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page"><a>Countries</a></li>
-        </ol>
-        <button class="btn btn-primary" type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#countryModal"
-                data-bs-modalTitle="Create Country"
-                data-bs-action="save">Create Country</button>
+    <nav class="nav nav-tabs">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/continents">Continents</a>
+        <a class="nav-link active" aria-current="page" href="/countries">Countries</a>
+        <a class="nav-link" href="/cities">Cities</a>
     </nav>
 
-    <aside th:if="${message}" class="alert alert-info text-center" role="alert">
-        <span th:text="${message}" />
+    <aside class="d-flex gap-2 px-2">
+        <div class="flex-grow-1">
+            <div data-th-if="${message}" data-th-text="${message}" class="alert alert-info text-center m-0" role="alert"></div>
+        </div>
+        <div class="d-flex align-items-center">
+            <button class="btn btn-primary" type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#countryModal"
+                    data-bs-modalTitle="Create Country"
+                    data-bs-action="save">Create Country</button>
+        </div>
     </aside>
 
     <main>
@@ -43,28 +46,43 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="country : ${countries}">
-                    <td th:text="${country.id}">
-                    <td th:text="${country.name}">
-                    <td th:text="${country.area}">
-                    <td th:text="${country.population}">
-                    <td th:text="${country.capital?.name}">
-                    <td th:text="${country.continent?.name}">
+                <tr data-th-each="country : ${countries}">
+                    <td data-th-text="${country.id}"></td>
+                    <td data-th-text="${country.name}"></td>
+                    <td data-th-text="${country.area}"></td>
+                    <td data-th-text="${country.population}"></td>
+                    <td>
+                        <a class="link-primary" title="Go to this city"
+                           data-th-href="@{'/cities?id=' + ${country.capital?.id}}"
+                           data-th-text="${country.capital?.name}"></a>
+                    </td>
+                    <td>
+                        <a class="link-primary" title="Go to this continent"
+                           data-th-href="@{'/continents?id=' + ${country.continent?.id}}"
+                           data-th-text="${country.continent?.name}"></a>
+                    </td>
                     <td class="d-flex justify-content-end gap-2">
-                        <button class="btn btn-warning" type="button"
+                        <a class="btn btn-outline-primary" title="Show all cities in this country"
+                           data-th-href="@{'/cities?country=' + ${country.name}}">
+                            <i class="bi bi-buildings-fill"></i>
+                        </a>
+                        <button class="btn btn-warning" type="button" title="Edit this country"
                                 data-bs-toggle="modal"
                                 data-bs-target="#countryModal"
-                                th:data-bs-modalTitle="@{'Edit Country (ID ' + ${country.id} + ')'}"
-                                th:data-bs-action="edit"
-                                th:data-bs-countryID="${country.id}"
-                                th:data-bs-countryName="${country.name}"
-                                th:data-bs-countryArea="${country.area}"
-                                th:data-bs-countryPopulation="${country.population}"
-                                th:data-bs-countryCapital="${country.capital?.id}"
-                                th:data-bs-countryContinent="${country.continent?.id}">
+                                data-th-data-bs-modalTitle="@{'Edit Country (ID ' + ${country.id} + ')'}"
+                                data-th-data-bs-action="edit"
+                                data-th-data-bs-countryID="${country.id}"
+                                data-th-data-bs-countryName="${country.name}"
+                                data-th-data-bs-countryArea="${country.area}"
+                                data-th-data-bs-countryPopulation="${country.population}"
+                                data-th-data-bs-countryCapital="${country.capital?.id}"
+                                data-th-data-bs-countryContinent="${country.continent?.id}">
                             <i class="bi bi-pen-fill"></i>
                         </button>
-                        <a class="btn btn-danger" th:href="@{'/countries/delete/' + ${country.id}}"><i class="bi bi-trash-fill"></i></a>
+                        <a class="btn btn-danger" title="Delete this country"
+                           data-th-href="@{'/countries/delete/' + ${country.id}}">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
                     </td>
                 </tr>
             </tbody>
@@ -101,39 +119,21 @@
         </div>
     </aside>
 
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script data-th-src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <script>
         const modal = document.getElementById("countryModal");
 
         modal.addEventListener("show.bs.modal", event => {
             const button = event.relatedTarget;
 
-            const title = button.getAttribute("data-bs-modalTitle");
-            const action = button.getAttribute("data-bs-action");
-            const id = button.getAttribute("data-bs-countryID");
-            const name = button.getAttribute("data-bs-countryName");
-            const area = button.getAttribute("data-bs-countryArea");
-            const population = button.getAttribute("data-bs-countryPopulation");
-            const capital = button.getAttribute("data-bs-countryCapital");
-            const continent = button.getAttribute("data-bs-countryContinent");
-
-            const modalTitle = modal.querySelector("#countryModalLabel");
-            const modalForm = modal.querySelector("form");
-            const countryID = modal.querySelector("#countryID");
-            const countryName = modal.querySelector("#countryName");
-            const countryArea = modal.querySelector("#countryArea");
-            const countryPopulation = modal.querySelector("#countryPopulation");
-            const countryCapital = modal.querySelector("#countryCapital");
-            const countryContinent = modal.querySelector("#countryContinent");
-
-            modalTitle.textContent = title;
-            modalForm.action = "/countries/" + action;
-            countryID.value = id;
-            countryName.value = name;
-            countryArea.value = area;
-            countryPopulation.value = population;
-            countryCapital.value = capital;
-            countryContinent.value = continent;
+            modal.querySelector("#countryModalLabel").textContent = button.getAttribute("data-bs-modalTitle");
+            modal.querySelector("form").action = "/countries/" + button.getAttribute("data-bs-action");
+            modal.querySelector("#countryID").value = button.getAttribute("data-bs-countryID");
+            modal.querySelector("#countryName").value = button.getAttribute("data-bs-countryName");
+            modal.querySelector("#countryArea").value = button.getAttribute("data-bs-countryArea");
+            modal.querySelector("#countryPopulation").value = button.getAttribute("data-bs-countryPopulation");
+            modal.querySelector("#countryCapital").value = button.getAttribute("data-bs-countryCapital");
+            modal.querySelector("#countryContinent").value = button.getAttribute("data-bs-countryContinent");
         });
     </script>
 </body>

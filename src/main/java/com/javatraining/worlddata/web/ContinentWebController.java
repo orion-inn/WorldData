@@ -1,9 +1,11 @@
 package com.javatraining.worlddata.web;
 
 import com.javatraining.worlddata.entity.Continent;
+import com.javatraining.worlddata.entity.Country;
 import com.javatraining.worlddata.exception.ResourceAlreadyExistsException;
 import com.javatraining.worlddata.exception.ResourceNotFoundException;
 import com.javatraining.worlddata.service.ContinentService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,9 +22,23 @@ public class ContinentWebController {
     ContinentService service;
 
     @GetMapping("")
-    String showContinents(Model model) {
-        List<Continent> continents = service.getAll();
+    String showContinents(Model model,
+                          @PathParam("id") Integer id) {
+        String title;
+        List<Continent> continents;
+
+        if (id != null) {
+            Continent continent = service.getById(id);
+            title = continent.getName();
+            continents = List.of(continent);
+        } else {
+            title = "Continents";
+            continents = service.getAll();
+        }
+
+        model.addAttribute("title", title);
         model.addAttribute("continents", continents);
+
         return "continents";
     }
 

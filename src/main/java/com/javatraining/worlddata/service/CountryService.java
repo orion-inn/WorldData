@@ -64,4 +64,9 @@ public class CountryService {
         log.debug("Getting all countries");
         return repository.findAll();
     }
+
+    public List<Country> getAllByContinentName(String continent) {
+        log.debug("Getting all countries by continent name");
+        return repository.findAllByContinentName(continent);
+    }
 }
