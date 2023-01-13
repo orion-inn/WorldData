@@ -20,7 +20,7 @@ public class CountryService {
 
     public Country create(Country country) {
         log.debug("Creating country");
-        if (repository.findByName(country.getName()).isPresent()) {
+        if(repository.existsByName(country.getName())) {
             throw new ResourceAlreadyExistsException("Country with name='" + country.getName() + "' already exists");
         }
 
@@ -29,9 +29,9 @@ public class CountryService {
 
     public Country update(int id, Country country) {
         log.debug("Updating country");
-        Country countryToUpdate = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Country with id=" + id + " not found"));
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Country with id=" + id + " not found");
+        }
 
         country.setId(id);
 

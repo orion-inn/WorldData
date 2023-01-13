@@ -45,11 +45,11 @@ class ContinentServiceTest {
 
     @Test
     void testCreateNewShouldSucceed() {
-        when(repository.findByName(eq(newContinent.getName()))).thenReturn(Optional.empty());
+        when(repository.existsByName(eq(newContinent.getName()))).thenReturn(false);
         when(repository.save(any(Continent.class))).thenReturn(newContinent);
 
         assertEquals(newContinent, service.create(newContinent));
-        verify(repository).findByName(stringArgumentCaptor.capture());
+        verify(repository).existsByName(stringArgumentCaptor.capture());
         verify(repository).save(continentArgumentCaptor.capture());
         assertEquals(newContinent.getName(), stringArgumentCaptor.getValue());
         assertEquals(newContinent, continentArgumentCaptor.getValue());
@@ -57,21 +57,21 @@ class ContinentServiceTest {
 
     @Test
     void testCreateOldShouldFail() {
-        when(repository.findByName(anyString())).thenReturn(Optional.of(oldContinent));
+        when(repository.existsByName(anyString())).thenReturn(true);
 
         assertThrows(ResourceAlreadyExistsException.class, () -> service.create(oldContinent));
-        verify(repository).findByName(stringArgumentCaptor.capture());
+        verify(repository).existsByName(stringArgumentCaptor.capture());
         verifyNoMoreInteractions(repository);
         assertEquals(oldContinent.getName(), stringArgumentCaptor.getValue());
     }
 
     @Test
     void testUpdateOldShouldSucceed() {
-        when(repository.findById(anyInt())).thenReturn(Optional.of(oldContinent));
+        when(repository.existsById(anyInt())).thenReturn(true);
         when(repository.save(any(Continent.class))).thenReturn(newContinent);
 
         assertEquals(newContinent, service.update(oldContinent.getId(), oldContinent));
-        verify(repository).findById(integerArgumentCaptor.capture());
+        verify(repository).existsById(integerArgumentCaptor.capture());
         verify(repository).save(continentArgumentCaptor.capture());
         assertEquals(oldContinent.getId(), integerArgumentCaptor.getValue());
         assertEquals(oldContinent, continentArgumentCaptor.getValue());
@@ -79,10 +79,10 @@ class ContinentServiceTest {
 
     @Test
     void testUpdateNewShouldFail() {
-        when(repository.findById(eq(newContinent.getId()))).thenReturn(Optional.empty());
+        when(repository.existsById(eq(newContinent.getId()))).thenReturn(false);
 
         assertThrows(ResourceNotFoundException.class, () -> service.update(newContinent.getId(), newContinent));
-        verify(repository).findById(integerArgumentCaptor.capture());
+        verify(repository).existsById(integerArgumentCaptor.capture());
         verifyNoMoreInteractions(repository);
         assertEquals(newContinent.getId(), integerArgumentCaptor.getValue());
     }

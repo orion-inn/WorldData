@@ -42,11 +42,11 @@ class CityServiceTest {
 
     @Test
     void testCreateNewShouldSucceed() {
-        when(repository.findByName(eq(newCity.getName()))).thenReturn(Optional.empty());
+        when(repository.existsByName(eq(newCity.getName()))).thenReturn(false);
         when(repository.save(any(City.class))).thenReturn(newCity);
 
         assertEquals(newCity, service.create(newCity));
-        verify(repository).findByName(stringArgumentCaptor.capture());
+        verify(repository).existsByName(stringArgumentCaptor.capture());
         verify(repository).save(cityArgumentCaptor.capture());
         assertEquals(newCity.getName(), stringArgumentCaptor.getValue());
         assertEquals(newCity, cityArgumentCaptor.getValue());
@@ -54,21 +54,21 @@ class CityServiceTest {
 
     @Test
     void testCreateOldShouldFail() {
-        when(repository.findByName(anyString())).thenReturn(Optional.of(oldCity));
+        when(repository.existsByName(anyString())).thenReturn(true);
 
         assertThrows(ResourceAlreadyExistsException.class, () -> service.create(oldCity));
-        verify(repository).findByName(stringArgumentCaptor.capture());
+        verify(repository).existsByName(stringArgumentCaptor.capture());
         verifyNoMoreInteractions(repository);
         assertEquals(oldCity.getName(), stringArgumentCaptor.getValue());
     }
 
     @Test
     void testUpdateOldShouldSucceed() {
-        when(repository.findById(anyInt())).thenReturn(Optional.of(oldCity));
+        when(repository.existsById(anyInt())).thenReturn(true);
         when(repository.save(any(City.class))).thenReturn(newCity);
 
         assertEquals(newCity, service.update(oldCity.getId(), oldCity));
-        verify(repository).findById(integerArgumentCaptor.capture());
+        verify(repository).existsById(integerArgumentCaptor.capture());
         verify(repository).save(cityArgumentCaptor.capture());
         assertEquals(oldCity.getId(), integerArgumentCaptor.getValue());
         assertEquals(oldCity, cityArgumentCaptor.getValue());
@@ -76,10 +76,10 @@ class CityServiceTest {
 
     @Test
     void testUpdateNewShouldFail() {
-        when(repository.findById(eq(newCity.getId()))).thenReturn(Optional.empty());
+        when(repository.existsById(eq(newCity.getId()))).thenReturn(false);
 
         assertThrows(ResourceNotFoundException.class, () -> service.update(newCity.getId(), newCity));
-        verify(repository).findById(integerArgumentCaptor.capture());
+        verify(repository).existsById(integerArgumentCaptor.capture());
         verifyNoMoreInteractions(repository);
         assertEquals(newCity.getId(), integerArgumentCaptor.getValue());
     }

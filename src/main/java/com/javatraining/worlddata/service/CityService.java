@@ -19,7 +19,7 @@ public class CityService {
 
     public City create(City city) {
         log.debug("Creating city");
-        if (repository.findByName(city.getName()).isPresent()) {
+        if (repository.existsByName(city.getName())) {
             throw new ResourceAlreadyExistsException("City with name='" + city.getName() + "' already exists");
         }
 
@@ -28,9 +28,9 @@ public class CityService {
 
     public City update(int id, City city) {
         log.debug("Updating city");
-        City cityToUpdate = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("City with id=" + id + " not found"));
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("City with id=" + id + " not found");
+        }
 
         city.setId(id);
 

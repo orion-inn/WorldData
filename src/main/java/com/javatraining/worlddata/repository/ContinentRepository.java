@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ContinentRepository extends JpaRepository<Continent, Integer> {
+    Boolean existsByName(String name);
     Optional<Continent> findByName(String name);
 }

@@ -20,7 +20,7 @@ public class ContinentService {
 
     public Continent create(Continent continent) {
         log.debug("Creating continent");
-        if (repository.findByName(continent.getName()).isPresent()) {
+        if (repository.existsByName(continent.getName())) {
             throw new ResourceAlreadyExistsException("Continent with name='" + continent.getName() + "' already exists");
         }
 
@@ -29,9 +29,9 @@ public class ContinentService {
 
     public Continent update(int id, Continent continent) {
         log.debug("Updating continent");
-        Continent continentToUpdate = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Continent with id=" + id + " not found"));
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Continent with id=" + id + " not found");
+        }
 
         continent.setId(id);
 
