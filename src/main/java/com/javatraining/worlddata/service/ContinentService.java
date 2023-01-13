@@ -1,6 +1,7 @@
 package com.javatraining.worlddata.service;
 
 import com.javatraining.worlddata.entity.Continent;
+import com.javatraining.worlddata.entity.Country;
 import com.javatraining.worlddata.exception.ResourceAlreadyExistsException;
 import com.javatraining.worlddata.exception.ResourceNotFoundException;
 import com.javatraining.worlddata.repository.ContinentRepository;
@@ -42,6 +43,10 @@ public class ContinentService {
         Continent continentToDelete = repository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Continent with id=" + id + " not found"));
+
+        for (Country country : continentToDelete.getCountries()) {
+            country.setContinent(null);
+        }
 
         repository.delete(continentToDelete);
     }

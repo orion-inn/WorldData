@@ -1,6 +1,8 @@
 package com.javatraining.worlddata.entity;
 
 import java.io.Serializable;
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,11 +21,11 @@ public class Country implements Serializable {
     private Long area;
     private Long population;
 
-    @OneToOne
-    private City capital;
-
     @ManyToOne
     private Continent continent;
+
+    @OneToMany(mappedBy = "country")
+    private Set<City> cities;
 
     @Override
     public boolean equals(Object o) {

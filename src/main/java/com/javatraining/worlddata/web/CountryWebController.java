@@ -1,6 +1,5 @@
 package com.javatraining.worlddata.web;
 
-import com.javatraining.worlddata.entity.City;
 import com.javatraining.worlddata.entity.Country;
 import com.javatraining.worlddata.exception.ResourceAlreadyExistsException;
 import com.javatraining.worlddata.exception.ResourceNotFoundException;

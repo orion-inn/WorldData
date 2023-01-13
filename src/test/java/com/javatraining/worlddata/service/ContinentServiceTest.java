@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,9 +36,11 @@ class ContinentServiceTest {
     static void setUpBeforeAll() {
         oldContinent = new Continent("Europe");
         oldContinent.setId(1);
+        oldContinent.setCountries(new HashSet<>());
 
         newContinent = new Continent("Australia");
         newContinent.setId(2);
+        newContinent.setCountries(new HashSet<>());
     }
 
     @Test

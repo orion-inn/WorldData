@@ -14,21 +14,59 @@ import org.springframework.context.annotation.Configuration;
 public class ContinentHelper {
 
     @Bean
-    CommandLineRunner initContinents(ContinentRepository continentRepository,
+    CommandLineRunner initDB(ContinentRepository continentRepository,
                                      CountryRepository countryRepository,
                                      CityRepository cityRepository) {
         return args -> {
-            continentRepository.save(new Continent("Africa"));
-            continentRepository.save(new Continent("Asia"));
-            continentRepository.save(new Continent("Europe"));
+            Continent continent1 = new Continent("Africa");
+            Continent continent2 = new Continent("Asia");
+            Continent continent3 = new Continent("Europe");
 
-            countryRepository.save(new Country("Nepal"));
-            countryRepository.save(new Country("Egypt"));
-            countryRepository.save(new Country("Serbia"));
+            Country country1 = new Country("Nepal");
+            Country country2 = new Country("Egypt");
+            Country country3 = new Country("Serbia");
+            Country country4 = new Country("Russia");
+            Country country5 = new Country("Nigeria");
 
-            cityRepository.save(new City("Belgrade"));
-            cityRepository.save(new City("Nizhny Novgorod"));
-            cityRepository.save(new City("Kairo"));
+            City city1 = new City("Belgrade");
+            City city2 = new City("Nizhny Novgorod");
+            City city3 = new City("Kairo");
+            City city4 = new City("Novi Sad");
+            City city5 = new City("Moscow");
+            City city6 = new City("Katmandu");
+            City city7 = new City("Lagos");
+
+            country1.setContinent(continent2);
+            country2.setContinent(continent1);
+            country3.setContinent(continent3);
+            country4.setContinent(continent3);
+            country5.setContinent(continent1);
+
+            city1.setCountry(country3);
+            city2.setCountry(country4);
+            city3.setCountry(country2);
+            city4.setCountry(country3);
+            city5.setCountry(country4);
+            city6.setCountry(country1);
+            city7.setCountry(country5);
+
+            continentRepository.save(continent1);
+            continentRepository.save(continent2);
+            continentRepository.save(continent3);
+
+            countryRepository.save(country1);
+            countryRepository.save(country2);
+            countryRepository.save(country3);
+            countryRepository.save(country4);
+            countryRepository.save(country5);
+
+            cityRepository.save(city1);
+            cityRepository.save(city2);
+            cityRepository.save(city3);
+            cityRepository.save(city4);
+            cityRepository.save(city5);
+            cityRepository.save(city6);
+            cityRepository.save(city7);
         };
     }
 }

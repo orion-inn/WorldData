@@ -1,6 +1,8 @@
 package com.javatraining.worlddata.entity;
 
 import java.io.Serializable;
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +20,9 @@ public class Continent implements Serializable {
 
     private Long area;
     private Long population;
+
+    @OneToMany(mappedBy = "continent")
+    private Set<Country> countries;
 
     @Override
     public boolean equals(Object o) {

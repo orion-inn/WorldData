@@ -28,6 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public String exceptionHandler(Exception e) {
+        e.printStackTrace();
         return "An unexpected problem";
     }
 

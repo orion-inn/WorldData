@@ -1,5 +1,6 @@
 package com.javatraining.worlddata.service;
 
+import com.javatraining.worlddata.entity.City;
 import com.javatraining.worlddata.entity.Country;
 import com.javatraining.worlddata.exception.ResourceAlreadyExistsException;
 import com.javatraining.worlddata.exception.ResourceNotFoundException;
@@ -42,6 +43,10 @@ public class CountryService {
         Country countryToDelete = repository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Country with id=" + id + " not found"));
+
+        for (City city : countryToDelete.getCities()) {
+            city.setCountry(null);
+        }
 
         repository.delete(countryToDelete);
     }

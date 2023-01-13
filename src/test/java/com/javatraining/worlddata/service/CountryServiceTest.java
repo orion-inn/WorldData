@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,9 +36,11 @@ class CountryServiceTest {
     static void setUpBeforeAll() {
         oldCountry = new Country("Yugoslavia");
         oldCountry.setId(1);
+        oldCountry.setCities(new HashSet<>());
 
         newCountry = new Country("Serbia");
         newCountry.setId(2);
+        newCountry.setCities(new HashSet<>());
     }
 
     @Test
