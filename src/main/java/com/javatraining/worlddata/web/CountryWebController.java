@@ -66,7 +66,7 @@ public class CountryWebController {
             attributes.addFlashAttribute(
                     "message",
                     "Country with id=" + updatedCountry.getId() + " edited");
-        } catch (ResourceNotFoundException e) {
+        } catch (ResourceNotFoundException | ResourceAlreadyExistsException e) {
             attributes.addFlashAttribute("message", e.getMessage());
         }
 

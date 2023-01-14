@@ -21,6 +21,9 @@ public class Country implements Serializable {
     private Long area;
     private Long population;
 
+    @OneToOne
+    private City capital;
+
     @ManyToOne
     private Continent continent;
 

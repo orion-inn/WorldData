@@ -1,5 +1,6 @@
 package com.javatraining.worlddata.service;
 
+import com.javatraining.worlddata.entity.City;
 import com.javatraining.worlddata.entity.Country;
 import com.javatraining.worlddata.exception.ResourceAlreadyExistsException;
 import com.javatraining.worlddata.exception.ResourceNotFoundException;
@@ -37,10 +38,12 @@ class CountryServiceTest {
         oldCountry = new Country("Yugoslavia");
         oldCountry.setId(1);
         oldCountry.setCities(new HashSet<>());
+        oldCountry.setCapital(new City("Belgrade"));
 
         newCountry = new Country("Serbia");
         newCountry.setId(2);
         newCountry.setCities(new HashSet<>());
+        newCountry.setCapital(new City("Belgrade"));
     }
 
     @Test

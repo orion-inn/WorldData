@@ -22,6 +22,15 @@ public class City implements Serializable {
     @ManyToOne
     private Country country;
 
+    public boolean isCapital() {
+        if (this.getCountry() == null) {
+            return false;
+        }
+
+        City capital = this.getCountry().getCapital();
+        return capital != null && capital.equals(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

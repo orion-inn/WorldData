@@ -41,6 +41,7 @@
                     <th>Area</th>
                     <th>Population</th>
                     <th>Continent</th>
+                    <th>Capital</th>
                     <th></th>
                 </tr>
             </thead>
@@ -54,6 +55,11 @@
                         <a class="link-primary" title="Go to this continent"
                            data-th-href="@{'/continents?id=' + ${country.continent?.id}}"
                            data-th-text="${country.continent?.name}"></a>
+                    </td>
+                    <td>
+                        <a class="link-primary" title="Go to this city"
+                           data-th="href=@{'/cities?id=' + ${country.capital?.id}"
+                           data-th-text="${country.capital?.name}"></a>
                     </td>
                     <td class="d-flex justify-content-end gap-2">
                         <a class="btn btn-outline-primary" title="Show all cities in this country"
@@ -69,7 +75,8 @@
                                 data-th-data-bs-countryName="${country.name}"
                                 data-th-data-bs-countryArea="${country.area}"
                                 data-th-data-bs-countryPopulation="${country.population}"
-                                data-th-data-bs-countryContinent="${country.continent?.id}">
+                                data-th-data-bs-countryContinent="${country.continent?.id}"
+                                data-th-data-bs-countryCapital="${country.capital?.id}">
                             <i class="bi bi-pen-fill"></i>
                         </button>
                         <a class="btn btn-danger" title="Delete this country"
@@ -100,6 +107,8 @@
                         <input class="form-control" id="countryPopulation" type="number" name="population" min="0">
                         <label class="col-form-label" for="countryContinent">Continent</label>
                         <input class="form-control" id="countryContinent" type="number" name="continent" min="0">
+                        <label class="col-form-label" for="countryCapital">Capital</label>
+                        <input class="form-control" id="countryCapital" type="number" name="capital" min="0">
                     </main>
                     <footer class="modal-footer">
                         <button class="btn btn-secondary" type="reset" data-bs-dismiss="modal">Cancel</button>
@@ -124,6 +133,7 @@
             modal.querySelector("#countryArea").value = button.getAttribute("data-bs-countryArea");
             modal.querySelector("#countryPopulation").value = button.getAttribute("data-bs-countryPopulation");
             modal.querySelector("#countryContinent").value = button.getAttribute("data-bs-countryContinent");
+            modal.querySelector("#countryCapital").value = button.getAttribute("data-bs-countryCapital");
         });
     </script>
 </body>

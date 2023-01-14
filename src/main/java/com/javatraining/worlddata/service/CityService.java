@@ -43,6 +43,10 @@ public class CityService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("City with id=" + id + " not found"));
 
+        if (cityToDelete.isCapital()) {
+            cityToDelete.getCountry().setCapital(null);
+        }
+
         repository.delete(cityToDelete);
     }
 

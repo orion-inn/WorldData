@@ -20,8 +20,14 @@ public class CountryService {
 
     public Country create(Country country) {
         log.debug("Creating country");
-        if(repository.existsByName(country.getName())) {
+        if (repository.existsByName(country.getName())) {
             throw new ResourceAlreadyExistsException("Country with name='" + country.getName() + "' already exists");
+        }
+
+        City capital = country.getCapital();
+        if (capital != null && capital.isCapital()) {
+            throw new ResourceAlreadyExistsException(
+                    capital.getName() + " is already capital of " + capital.getCountry().getName());
         }
 
         return repository.save(country);
@@ -34,6 +40,12 @@ public class CountryService {
         }
 
         country.setId(id);
+
+        City capital = country.getCapital();
+        if (capital != null && capital.isCapital() && !capital.getCountry().equals(country)) {
+            throw new ResourceAlreadyExistsException(
+                    capital.getName() + " is already capital of " + capital.getCountry().getName());
+        }
 
         return repository.save(country);
     }
