@@ -28,8 +28,12 @@ public class CityService {
 
     public City update(int id, City city) {
         log.debug("Updating city");
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("City with id=" + id + " not found");
+        City cityToUpdate = repository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("City with id=" + id + " not found"));
+
+        if (cityToUpdate.isCapital() && !cityToUpdate.getCountry().equals(city.getCountry())) {
+            cityToUpdate.getCountry().setCapital(null);
         }
 
         city.setId(id);

@@ -64,11 +64,11 @@ class CityServiceTest {
 
     @Test
     void testUpdateOldShouldSucceed() {
-        when(repository.existsById(anyInt())).thenReturn(true);
+        when(repository.findById(eq(oldCity.getId()))).thenReturn(Optional.of(oldCity));
         when(repository.save(any(City.class))).thenReturn(newCity);
 
         assertEquals(newCity, service.update(oldCity.getId(), oldCity));
-        verify(repository).existsById(integerArgumentCaptor.capture());
+        verify(repository).findById(integerArgumentCaptor.capture());
         verify(repository).save(cityArgumentCaptor.capture());
         assertEquals(oldCity.getId(), integerArgumentCaptor.getValue());
         assertEquals(oldCity, cityArgumentCaptor.getValue());
@@ -76,10 +76,10 @@ class CityServiceTest {
 
     @Test
     void testUpdateNewShouldFail() {
-        when(repository.existsById(eq(newCity.getId()))).thenReturn(false);
+        when(repository.findById(eq(newCity.getId()))).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> service.update(newCity.getId(), newCity));
-        verify(repository).existsById(integerArgumentCaptor.capture());
+        verify(repository).findById(integerArgumentCaptor.capture());
         verifyNoMoreInteractions(repository);
         assertEquals(newCity.getId(), integerArgumentCaptor.getValue());
     }

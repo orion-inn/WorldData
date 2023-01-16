@@ -30,6 +30,10 @@ public class CountryService {
                     capital.getName() + " is already capital of " + capital.getCountry().getName());
         }
 
+        if (capital != null) {
+            capital.setCountry(country);
+        }
+
         return repository.save(country);
     }
 
@@ -45,6 +49,10 @@ public class CountryService {
         if (capital != null && capital.isCapital() && !capital.getCountry().equals(country)) {
             throw new ResourceAlreadyExistsException(
                     capital.getName() + " is already capital of " + capital.getCountry().getName());
+        }
+
+        if (capital != null) {
+            capital.setCountry(country);
         }
 
         return repository.save(country);

@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @RequiredArgsConstructor @AllArgsConstructor @ToString
+@Getter @Setter @NoArgsConstructor @RequiredArgsConstructor @ToString
 public class City implements Serializable {
 
     @Id
