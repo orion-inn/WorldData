@@ -3,6 +3,7 @@ package com.javatraining.worlddata.entity;
 import java.io.Serializable;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,12 +22,15 @@ public class Country implements Serializable {
     private Long area;
     private Long population;
 
+    @JsonIgnore
     @OneToOne
     private City capital;
 
+    @JsonIgnore
     @ManyToOne
     private Continent continent;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "country")
     private Set<City> cities;
 

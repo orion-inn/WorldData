@@ -1,6 +1,8 @@
 package com.javatraining.worlddata.entity;
 
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +21,7 @@ public class City implements Serializable {
     private Long area;
     private Long population;
 
+    @JsonIgnore
     @ManyToOne
     private Country country;
 
